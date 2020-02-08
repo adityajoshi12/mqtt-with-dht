@@ -20,8 +20,8 @@ char humidityString[50];
 
 // Update these with values suitable for your network.
 
-const char *ssid = "Honor 9 Lite_658E";
-const char *password = "tanuja276";
+const char *ssid = "Lenovo K8 Note 7546";
+const char *password = "farcry@2014";
 const char *mqtt_server = "192.168.43.209";
 
 WiFiClient espClient;

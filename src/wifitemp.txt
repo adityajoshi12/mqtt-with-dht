@@ -1,0 +1,114 @@
+#include <Arduino.h>
+#include "DHT.h"
+#include <Adafruit_Sensor.h>
+#include <DHT_U.h>
+
+#include <ESP8266WiFi.h>
+
+#include <ESP8266WebServer.h>
+#include <DNSServer.h>
+#include <WiFiManager.h>
+#define DHTTYPE DHT11
+
+#define DHT11_PIN 5
+uint32_t delayMS = 3000;
+
+const int PIN_LED = 2;
+
+DHT dht(DHT11_PIN, DHTTYPE);
+void setup()
+{
+  pinMode(PIN_LED, OUTPUT);
+  Serial.begin(9600);
+  dht.begin();
+  Serial.println(F("DHT11 Unified Sensor Data"));
+  Serial.println("\n Starting");
+  unsigned long startedAt = millis();
+  WiFi.printDiag(Serial);
+  Serial.println("Opening configuration portal");
+  digitalWrite(PIN_LED, LOW);
+  WiFiManager wifiManager;
+
+  char userId[10] = "";
+  char connectionString[40] = "";
+  WiFiManagerParameter useridText("<p style=\"margin-bottom: -16px;\">Enter User ID (10 characters )</p>");
+  wifiManager.addParameter(&useridText);
+  WiFiManagerParameter userIdInput("userId", "User ID", userId, 10);
+  wifiManager.addParameter(&userIdInput);
+  WiFiManagerParameter connectionStringText("<p style=\"margin-bottom: -16px;\">Enter Connection ID (40 characters)</p>");
+  wifiManager.addParameter(&connectionStringText);
+  WiFiManagerParameter connectionStringTextInput("connectionString", "Connection ID", connectionString, 40);
+  wifiManager.addParameter(&connectionStringTextInput);
+
+  if (WiFi.SSID() != "")
+    wifiManager.setConfigPortalTimeout(60); //If no access point name has been previously entered disable timeout.
+
+  //it starts an access point
+  //and goes into a blocking loop awaiting configuration
+  if (!wifiManager.startConfigPortal("ESP8266", "password")) //Delete these two parameters if you do not want a WiFi password on your configuration access point
+  {
+    Serial.println("Not connected to WiFi but continuing anyway.");
+  }
+  else
+  {
+    //if you get here you have connected to the WiFi
+    Serial.println("connected...yeey :)");
+    //strcpy(output, custom_output.getValue());
+    Serial.println("*******************data captured is*******************");
+    Serial.println(userIdInput.getValue());
+    Serial.println(connectionStringTextInput.getValue());
+    
+    
+  }
+  digitalWrite(PIN_LED, HIGH); // Turn led off as we are not in configuration mode.
+                               // For some unknown reason webserver can only be started once per boot up
+                               // so webserver can not be used again in the sketch.
+
+  Serial.print("After waiting ");
+  int connRes = WiFi.waitForConnectResult();
+  float waited = (millis() - startedAt);
+  Serial.print(waited / 1000);
+  Serial.print(" secs in setup() connection result is ");
+  Serial.println(connRes);
+  if (WiFi.status() != WL_CONNECTED)
+  {
+    Serial.println("failed to connect, finishing setup anyway");
+  }
+  else
+  {
+    Serial.print("local ip: ");
+    Serial.println(WiFi.localIP());
+  }
+}
+
+void loop()
+{
+
+  delay(delayMS);
+  float h = dht.readHumidity();
+  float t = dht.readTemperature();
+  float f = dht.readTemperature(true);
+  if (isnan(h) || isnan(t) || isnan(f))
+  {
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+  }
+
+  float hif = dht.computeHeatIndex(f, h);
+  float hic = dht.computeHeatIndex(t, h, false);
+
+  Serial.print("Humidity: ");
+  Serial.print(h);
+  Serial.print(" %\t");
+  Serial.print("Temperature: ");
+  Serial.print(t);
+  Serial.print(" *C ");
+  Serial.print(f);
+  Serial.print(" *F\t");
+  Serial.print("Heat index: ");
+  Serial.print(hic);
+  Serial.print(" *C ");
+  Serial.print(hif);
+  Serial.println(" *F");
+  delay(delayMS);
+}

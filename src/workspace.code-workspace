@@ -1,0 +1,30 @@
+{
+	"folders": [
+		{
+			"path": "/home/aditya/BlinkLed"
+		},
+		{
+			"name": "190912-165115-esp32dev",
+			"path": "/home/aditya/Documents/PlatformIO/Projects/190912-165115-esp32dev"
+		},
+		{
+			"name": "dht",
+			"path": "/home/aditya/Documents/PlatformIO/Projects/dht"
+		}
+	],
+	"settings": {
+		"terminal.integrated.env.linux": {
+			"PATH": "/home/aditya/.platformio/penv/bin:/home/aditya/.platformio/penv:/home/aditya/Desktop/fabric-samples/bin:/home/aditya/flutter/bin:/home/aditya/ardupilot/Tools/autotest:/opt/gcc-arm-none-eabi-6-2017-q2-update/bin:/home/aditya/Desktop/fabric-samples/bin:/home/aditya/flutter/bin:/home/aditya/bin:/home/aditya/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/db/bin:/usr/lib/jvm/java-8-oracle/jre/bin:/usr/lib/jvm/java-8-oracle/bin:/usr/lib/jvm/java-8-oracle/db/bin:/usr/lib/jvm/java-8-oracle/jre/bin",
+			"PLATFORMIO_CALLER": "vscode"
+		},
+		"files.associations": {
+			"string": "cpp",
+			"array": "cpp",
+			"deque": "cpp",
+			"list": "cpp",
+			"unordered_map": "cpp",
+			"vector": "cpp",
+			"initializer_list": "cpp"
+		}
+	}
+}
